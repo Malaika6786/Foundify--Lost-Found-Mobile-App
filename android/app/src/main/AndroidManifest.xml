@@ -73,7 +73,7 @@
         <!-- AdMob App ID (Foundify production). -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-2846107225527560~4827205248" />
+            android:value="ca-app-pub-2502837360597894~7190238578" />
 
         <!-- Default notification channel for push (see
              supabase/functions/send-push/index.ts, which sets this same

@@ -15,7 +15,7 @@ class AdService {
     if (kDebugMode) {
       return 'ca-app-pub-3940256099942544/9214589741'; // Google test banner
     }
-    return 'ca-app-pub-2846107225527560/8587476539'; // Foundify production
+    return 'ca-app-pub-2502837360597894/4167480250'; // Foundify production
   }
 
   /// Full-screen interstitial. Not yet shown anywhere in the app — call
@@ -25,7 +25,7 @@ class AdService {
     if (kDebugMode) {
       return 'ca-app-pub-3940256099942544/1033173712'; // Google test interstitial
     }
-    return 'ca-app-pub-2846107225527560/5544316110'; // Foundify production
+    return 'ca-app-pub-2502837360597894/7974863320'; // Foundify production
   }
 
   /// Opt-in rewarded ad. Not yet shown anywhere in the app — call
@@ -35,7 +35,7 @@ class AdService {
     if (kDebugMode) {
       return 'ca-app-pub-3940256099942544/5224354917'; // Google test rewarded
     }
-    return 'ca-app-pub-2846107225527560/4231234443'; // Foundify production
+    return 'ca-app-pub-2502837360597894/2088111824'; // Foundify production
   }
 
   static InterstitialAd? _interstitialAd;

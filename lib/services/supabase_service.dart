@@ -49,6 +49,15 @@ class SupabaseService {
     return supabase.auth.signUp(
       email: email,
       password: password,
+      // Without this, the "Confirm your email" link falls back to
+      // Supabase's default Site URL (often left as localhost from initial
+      // project setup) — same class of bug already fixed for Google
+      // Sign-In and password reset. This points it at the same callback
+      // scheme already registered in AndroidManifest.xml, so confirming
+      // opens the app directly instead of a browser tab that goes nowhere.
+      emailRedirectTo: kIsWeb
+          ? Uri.base.origin
+          : 'io.supabase.flutter://login-callback/',
       data: {
         if (name != null && name.isNotEmpty) 'full_name': name,
         if (name != null && name.isNotEmpty) 'username': name,
