@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Foundify brand pink — matches AppColors.primary500 in
+         lib/theme/app_theme.dart and the adaptive launcher icon background
+         (see flutter_launcher_icons config in pubspec.yaml). Used as the
+         splash screen background so the native launch screen matches the
+         app's actual brand instead of a blank default white. -->
+    <color name="splash_background">#D6247A</color>
+
+    <!-- Adaptive launcher icon background — referenced by
+         mipmap-anydpi-v26/ic_launcher.xml. This was already relied on
+         before today (pubspec.yaml's flutter_launcher_icons config sets
+         adaptive_icon_background to this same value) but the actual color
+         resource had never been generated/committed, so the release build
+         only failed once a values/colors.xml file existed for Gradle to
+         validate resources against fresh. -->
+    <color name="ic_launcher_background">#D6247A</color>
+</resources>

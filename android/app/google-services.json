@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "1004407773491",
+    "project_id": "lost-and-found-app-b7400",
+    "storage_bucket": "lost-and-found-app-b7400.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004407773491:android:3e2a122b9c137f321b0646",
+        "android_client_info": {
+          "package_name": "com.devorbit.foundify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAupeq0aWIf-B4WbqTOS10mT3wSe7JrXhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004407773491:android:348c73820e0403621b0646",
+        "android_client_info": {
+          "package_name": "com.example.lost_and_found_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAupeq0aWIf-B4WbqTOS10mT3wSe7JrXhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004407773491:android:db6c30cb1c12c5b61b0646",
+        "android_client_info": {
+          "package_name": "com.foundify.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAupeq0aWIf-B4WbqTOS10mT3wSe7JrXhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
