@@ -157,7 +157,25 @@ class _AuthScreenState extends State<AuthScreen> {
       // false just means the user dismissed the account picker — no error
       // to show, they simply landed back on this screen.
     } catch (e) {
-      _showSnack(friendlyError(e));
+      // TEMPORARY: a dialog (not a SnackBar, which was getting clipped by
+      // the phone's own nav bar) showing the raw error to pin down why
+      // native Google Sign-In fails. Remove once confirmed fixed.
+      debugPrint('Google sign-in raw error: $e');
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Google sign-in error'),
+            content: SingleChildScrollView(child: Text('$e')),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     } finally {
       if (mounted) setState(() => loading = false);
     }

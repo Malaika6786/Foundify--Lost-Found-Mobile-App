@@ -12,5 +12,5 @@ class SupabaseOptions {
   // Dashboard only), safe to ship in the app. It's what native Google
   // Sign-In uses as `serverClientId` so Supabase can verify the token.
   static const googleWebClientId =
-      '309599534792-63d7ericdfi5njb98hubr5gdph01h89c.apps.googleusercontent.com';
+      '1004407773491-ag02dajapnl41vfkin5rqub011j6ofti.apps.googleusercontent.com';
 }
