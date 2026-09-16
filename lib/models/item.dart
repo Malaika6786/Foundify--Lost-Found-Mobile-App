@@ -24,6 +24,11 @@ class Item {
   final String? locationLabel; // human readable place name, if available
 
   final DateTime? createdAt;
+  final DateTime? boostedUntil; // set by boost_item RPC, see migration 0022
+
+  /// True while a "Boost this post" (rewarded ad) is still in effect.
+  bool get isBoosted =>
+      boostedUntil != null && boostedUntil!.isAfter(DateTime.now());
 
   Item({
     required this.id,
@@ -42,6 +47,7 @@ class Item {
     this.category,
     this.locationLabel,
     this.createdAt,
+    this.boostedUntil,
   });
 
   factory Item.fromMap(Map<String, dynamic> m) {
@@ -81,6 +87,9 @@ class Item {
 
       createdAt: m['created_at'] != null
           ? DateTime.tryParse(m['created_at'])
+          : null,
+      boostedUntil: m['boosted_until'] != null
+          ? DateTime.tryParse(m['boosted_until'])
           : null,
     );
   }

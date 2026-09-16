@@ -41,6 +41,11 @@ class AdService {
   static InterstitialAd? _interstitialAd;
   static RewardedAd? _rewardedAd;
 
+  /// Lets a caller check before showing whether a rewarded ad is actually
+  /// ready, so it can tell the user "not ready yet" instead of the button
+  /// silently doing nothing.
+  static bool get hasRewardedAdReady => _rewardedAd != null;
+
   /// Loads an interstitial in the background so it's ready the instant
   /// [showInterstitialAdIfLoaded] is called — interstitials always need to
   /// be pre-loaded, they can't be requested and shown in the same instant.

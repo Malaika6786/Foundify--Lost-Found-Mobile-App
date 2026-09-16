@@ -338,7 +338,16 @@ class SupabaseService {
 
     final maps = data.map((m) => Map<String, dynamic>.from(m as Map)).toList();
     await attachLivePosterInfo(maps);
-    return maps.map(Item.fromMap).toList();
+    final items = maps.map(Item.fromMap).toList();
+
+    // Actively-boosted items ("Boost this post" — the reward behind the
+    // rewarded ad, see migration 0022) surface higher in the feed. A
+    // manual partition-and-concat instead of items.sort(...) so relative
+    // order within each group is preserved exactly as the server returned
+    // it (List.sort in Dart isn't guaranteed stable).
+    final boosted = items.where((i) => i.isBoosted).toList();
+    final rest = items.where((i) => !i.isBoosted).toList();
+    return [...boosted, ...rest];
   }
 
   /// Overrides each item map's snapshotted `username`/`avatar_url` with the
@@ -1212,6 +1221,14 @@ class SupabaseService {
   /// to work but never actually persisted.
   static Future<void> markItemResolved(String itemId) async {
     await supabase.rpc('mark_item_resolved', params: {'p_item_id': itemId});
+  }
+
+  /// Marks the caller's own item boosted for 24h (see migration 0022) —
+  /// called after a rewarded ad is watched through to completion. Only
+  /// ever call this from the ad's onUserEarnedReward callback, not on tap,
+  /// so the reward is actually earned before it's granted.
+  static Future<void> boostItem(String itemId) async {
+    await supabase.rpc('boost_item', params: {'p_item_id': itemId});
   }
 
   /// Uses a SECURITY DEFINER RPC (see

@@ -169,9 +169,21 @@ class _FeedPostCardState extends State<FeedPostCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        item.username ?? 'Unknown',
-                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      Row(
+                        children: [
+                          Text(
+                            item.username ?? 'Unknown',
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          if (item.isBoosted) ...[
+                            const SizedBox(width: 6),
+                            const Icon(
+                              Icons.bolt,
+                              size: 14,
+                              color: AppColors.primary500,
+                            ),
+                          ],
+                        ],
                       ),
                       Text(
                         '${item.locationLabel ?? 'Nearby'} · ${timeAgo(item.createdAt)}',

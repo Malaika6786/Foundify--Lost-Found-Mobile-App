@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/item.dart';
+import '../services/ad_service.dart';
 import '../services/supabase_service.dart';
 import '../theme/app_theme.dart';
 import '../theme/responsive.dart';
@@ -30,6 +31,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   int _pageIndex = 0;
   bool _savingReturned = false;
   bool _returned = false;
+  bool _boosted = false;
+  bool _boosting = false;
   late final bool isOwner;
 
   @override
@@ -42,6 +45,49 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         me.id == widget.item.userId);
     _pageController = PageController();
     _returned = widget.item.returned;
+    _boosted = widget.item.isBoosted;
+    if (isOwner && !_boosted) {
+      // Pre-load so the ad is ready the instant "Boost this post" is
+      // tapped — rewarded ads can't be requested and shown in one step.
+      AdService.loadRewardedAd();
+    }
+  }
+
+  void _boostPost() {
+    if (_boosting || _boosted) return;
+    setState(() => _boosting = true);
+    AdService.showRewardedAdIfLoaded(
+      onUserEarnedReward: (ad, reward) async {
+        // Only reaches here once the ad was actually watched through —
+        // the reward is granted for real completion, not just a tap.
+        try {
+          await SupabaseService.boostItem(widget.item.id);
+          if (mounted) setState(() => _boosted = true);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Boosted! Your post will show higher for 24h.'),
+              ),
+            );
+          }
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(friendlyError(e))));
+          }
+        }
+      },
+    );
+    // Ad may not have been loaded in time (slow network, just opened the
+    // screen) — tell the user plainly rather than silently doing nothing.
+    if (!AdService.hasRewardedAdReady) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ad not ready yet — try again in a moment.')),
+      );
+      AdService.loadRewardedAd();
+    }
+    setState(() => _boosting = false);
   }
 
   @override
@@ -457,6 +503,38 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                           ),
                         ),
                       StatusBadge(status: _returned ? 'Resolved' : 'Open'),
+                      if (_boosted) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary100,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.bolt,
+                                size: 14,
+                                color: AppColors.primary700,
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                'Boosted',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.primary700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -646,6 +724,35 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                       : AppColors.success500,
                                 ),
                               ),
+                              if (!_returned) ...[
+                                const SizedBox(height: 10),
+                                OutlinedButton.icon(
+                                  onPressed: _boosted ? null : _boostPost,
+                                  icon: Icon(
+                                    Icons.bolt,
+                                    color: _boosted
+                                        ? AppColors.neutralGrey
+                                        : AppColors.primary500,
+                                  ),
+                                  label: Text(
+                                    _boosted
+                                        ? 'Boosted for 24h'
+                                        : 'Boost this post (watch an ad)',
+                                    style: TextStyle(
+                                      color: _boosted
+                                          ? AppColors.neutralGrey
+                                          : AppColors.primary500,
+                                    ),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                      color: _boosted
+                                          ? Colors.grey.shade300
+                                          : AppColors.primary500,
+                                    ),
+                                  ),
+                                ),
+                              ],
                               const SizedBox(height: 10),
                               OutlinedButton.icon(
                                 onPressed: _deletePost,
