@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../services/ad_service.dart';
 import '../services/supabase_service.dart';
 import '../theme/app_theme.dart';
 import '../theme/responsive.dart';
@@ -33,6 +34,15 @@ class _PostItemScreenState extends State<PostItemScreen> {
   bool saving = false;
 
   final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    // Interstitials must be pre-loaded before they can be shown — starting
+    // the load now means one is very likely ready by the time the user
+    // finishes filling out the form and actually submits it.
+    AdService.loadInterstitialAd();
+  }
 
   @override
   void dispose() {
@@ -185,6 +195,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Item posted successfully')));
+      AdService.showInterstitialAdIfLoaded();
 
       if (status == 'lost') {
         // Server-side trigger already scored this report against open found
